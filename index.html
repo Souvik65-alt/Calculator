@@ -4,90 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ElectroCalc Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="libs/jspdf.min.js"></script>
-    <link rel="manifest" href="manifest.json">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="app-container">
         <!-- App Header -->
         <header class="app-header">
             <div class="header-content">
-                <h1 class="app-title">ElectroCalc Pro</h1>
+                <h1 class="app-title">ElectroCalc</h1>
                 <div class="header-controls">
-                    <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">🌓</button>
-                    <button id="menuToggle" class="icon-btn" aria-label="Menu">☰</button>
+                    <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="modeToggle" class="icon-btn" aria-label="Change mode">
+                        <i class="fas fa-calculator"></i>
+                    </button>
                 </div>
             </div>
         </header>
 
-        <!-- Mobile-Friendly Navigation Drawer -->
-        <nav id="modeDrawer" class="mode-drawer">
-            <div class="drawer-header">
-                <h2>Calculation Modes</h2>
-                <button id="closeDrawer" class="icon-btn">✕</button>
-            </div>
-            <div class="mode-categories">
-                <!-- Basic -->
+        <!-- Mode Selection Dropdown -->
+        <div id="modeDropdown" class="mode-dropdown">
+            <div class="dropdown-content">
                 <div class="mode-category">
                     <h3>Basic Tools</h3>
-                    <button class="mode-btn" onclick="showMode('basic')">Standard Calculator</button>
+                    <button class="mode-btn" data-mode="basic">Standard Calculator</button>
                 </div>
                 
-                <!-- Circuit Fundamentals -->
                 <div class="mode-category">
                     <h3>Circuit Fundamentals</h3>
-                    <button class="mode-btn" onclick="showMode('ohm')">Ohm's Law</button>
-                    <button class="mode-btn" onclick="showMode('power')">Power Calculator</button>
-                    <button class="mode-btn" onclick="showMode('series-parallel')">Series/Parallel</button>
+                    <button class="mode-btn" data-mode="ohm">Ohm's Law</button>
+                    <button class="mode-btn" data-mode="power">Power Calculator</button>
+                    <button class="mode-btn" data-mode="resistor">Resistor Code</button>
+                    <button class="mode-btn" data-mode="series-parallel">Series/Parallel</button>
                 </div>
                 
-                <!-- Components -->
                 <div class="mode-category">
-                    <h3>Components</h3>
-                    <button class="mode-btn" onclick="showMode('resistor')">Resistor Code</button>
-                    <button class="mode-btn" onclick="showMode('capacitor')">Capacitor Code</button>
-                    <button class="mode-btn" onclick="showMode('transistor')">Transistor Biasing</button>
+                    <h3>Advanced Tools</h3>
+                    <button class="mode-btn" data-mode="reactance">Reactance</button>
+                    <button class="mode-btn" data-mode="opamp">Op-Amp</button>
+                    <button class="mode-btn" data-mode="555">555 Timer</button>
                 </div>
-                
-                <!-- Additional categories for other modes -->
             </div>
-        </nav>
+        </div>
 
-        <!-- Main Calculator Area -->
-        <main class="calculator-container">
-            <!-- Current Mode Display -->
+        <!-- Calculator Display -->
+        <div class="display-container">
             <div class="mode-indicator">
-                <span id="currentMode">Basic Calculator</span>
+                <span id="currentMode">Standard Calculator</span>
             </div>
-            
-            <!-- Result Display -->
-            <div class="result-container">
-                <div id="calculationDisplay" class="calculation-display"></div>
-                <div id="resultDisplay" class="result-display">0</div>
-            </div>
-            
-            <!-- Dynamic Calculator Interface -->
-            <div id="basic" class="mode-section">
-                <!-- Basic calculator UI will be injected here by JS -->
-            </div>
-            
-            <!-- Other mode sections (initially hidden) -->
-            <div id="ohm" class="mode-section" style="display:none;"></div>
-            <div id="power" class="mode-section" style="display:none;"></div>
-            <!-- Additional mode sections -->
-            
-            <!-- Common Action Buttons -->
-            <div class="action-buttons">
-                <button id="clearBtn" class="action-btn">C</button>
-                <button id="backspaceBtn" class="action-btn">⌫</button>
-                <button id="exportBtn" class="action-btn export">Export PDF</button>
-            </div>
-        </main>
+            <div id="calculationDisplay" class="calculation-display"></div>
+            <div id="resultDisplay" class="result-display">0</div>
+        </div>
 
-        <!-- Mobile-Specific Keypad -->
-        <div class="mobile-keypad">
-            <!-- This will be populated by JavaScript based on current mode -->
+        <!-- Main Calculator Interface -->
+        <div id="calculatorInterface" class="calculator-interface">
+            <!-- Content will be dynamically loaded based on mode -->
+        </div>
+
+        <!-- Universal Numpad -->
+        <div class="numpad-container">
+            <div class="numpad-grid">
+                <!-- Numbers -->
+                <button class="numpad-btn" data-value="7">7</button>
+                <button class="numpad-btn" data-value="8">8</button>
+                <button class="numpad-btn" data-value="9">9</button>
+                
+                <button class="numpad-btn" data-value="4">4</button>
+                <button class="numpad-btn" data-value="5">5</button>
+                <button class="numpad-btn" data-value="6">6</button>
+                
+                <button class="numpad-btn" data-value="1">1</button>
+                <button class="numpad-btn" data-value="2">2</button>
+                <button class="numpad-btn" data-value="3">3</button>
+                
+                <button class="numpad-btn" data-value="0">0</button>
+                <button class="numpad-btn" data-value=".">.</button>
+                <button class="numpad-btn" data-value="±">±</button>
+            </div>
+            
+            <!-- Operations -->
+            <div class="operations-grid">
+                <button class="op-btn" data-op="clear">C</button>
+                <button class="op-btn" data-op="backspace"><i class="fas fa-backspace"></i></button>
+                <button class="op-btn" data-op="/">÷</button>
+                
+                <button class="op-btn" data-op="*">×</button>
+                <button class="op-btn" data-op="-">−</button>
+                <button class="op-btn" data-op="+">+</button>
+                
+                <button class="op-btn equals" data-op="=">=</button>
+                <button class="op-btn special" id="exportPDF"><i class="fas fa-file-pdf"></i> Export</button>
+            </div>
         </div>
     </div>
 
