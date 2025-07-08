@@ -1,0 +1,297 @@
+/* Mobile-First Design Approach */
+:root {
+    /* Light Theme */
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --accent-color: #4895ef;
+    --background-color: #f8f9fa;
+    --surface-color: #ffffff;
+    --error-color: #f72585;
+    --text-primary: #212529;
+    --text-secondary: #495057;
+    --text-on-primary: #ffffff;
+    
+    /* Spacing */
+    --base-spacing: 1rem;
+    --border-radius: 12px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    
+    /* Typography */
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+}
+
+[data-theme="dark"] {
+    --primary-color: #4895ef;
+    --secondary-color: #4361ee;
+    --accent-color: #3f37c9;
+    --background-color: #121212;
+    --surface-color: #1e1e1e;
+    --text-primary: #f8f9fa;
+    --text-secondary: #e9ecef;
+}
+
+/* Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    line-height: 1.5;
+    overscroll-behavior-y: contain;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Header Styles */
+.app-header {
+    background-color: var(--primary-color);
+    color: var(--text-on-primary);
+    padding: var(--base-spacing);
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: var(--font-size-lg);
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+/* Mode Drawer (Mobile Navigation) */
+.mode-drawer {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 85%;
+    max-width: 320px;
+    height: 100vh;
+    background-color: var(--surface-color);
+    box-shadow: var(--shadow-md);
+    z-index: 200;
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+    padding: var(--base-spacing);
+}
+
+.mode-drawer.open {
+    transform: translateX(100%);
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--base-spacing);
+    padding-bottom: var(--base-spacing);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.mode-category {
+    margin-bottom: var(--base-spacing);
+}
+
+.mode-category h3 {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+}
+
+.mode-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background-color: var(--surface-color);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: var(--border-radius);
+    text-align: left;
+    font-size: var(--font-size-md);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.mode-btn:hover, .mode-btn:focus {
+    background-color: rgba(0,0,0,0.05);
+}
+
+/* Main Calculator Area */
+.calculator-container {
+    flex: 1;
+    padding: var(--base-spacing);
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+}
+
+.mode-indicator {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.result-container {
+    margin-bottom: var(--base-spacing);
+    text-align: right;
+}
+
+.calculation-display {
+    font-size: var(--font-size-md);
+    color: var(--text-secondary);
+    min-height: 1.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.result-display {
+    font-size: 2.5rem;
+    font-weight: 500;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: var(--base-spacing);
+}
+
+.action-btn {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-lg);
+    cursor: pointer;
+    background-color: var(--surface-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.action-btn.export {
+    background-color: var(--accent-color);
+    color: var(--text-on-primary);
+}
+
+/* Mobile Keypad */
+.mobile-keypad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    padding: var(--base-spacing);
+    background-color: var(--surface-color);
+    border-top: 1px solid rgba(0,0,0,0.1);
+    position: sticky;
+    bottom: 0;
+}
+
+.keypad-btn {
+    aspect-ratio: 1;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-lg);
+    background-color: var(--surface-color);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.keypad-btn.primary {
+    background-color: var(--primary-color);
+    color: var(--text-on-primary);
+}
+
+.keypad-btn.secondary {
+    background-color: var(--secondary-color);
+    color: var(--text-on-primary);
+}
+
+/* Responsive Adjustments */
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 768px;
+        margin: 0 auto;
+    }
+    
+    .mode-drawer {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none;
+        background-color: transparent;
+        box-shadow: none;
+        padding: 0;
+    }
+    
+    .drawer-header, #closeDrawer {
+        display: none;
+    }
+    
+    .mode-categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .mode-category {
+        margin-bottom: 0;
+    }
+    
+    .mode-category h3 {
+        display: none;
+    }
+    
+    .mode-btn {
+        width: auto;
+        padding: 0.5rem 1rem;
+        margin-bottom: 0;
+    }
+    
+    .mobile-keypad {
+        display: none;
+    }
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] .mode-btn,
+[data-theme="dark"] .action-btn,
+[data-theme="dark"] .keypad-btn {
+    background-color: var(--surface-color);
+    border-color: rgba(255,255,255,0.1);
+}
+
+[data-theme="dark"] .mode-btn:hover,
+[data-theme="dark"] .mode-btn:focus {
+    background-color: rgba(255,255,255,0.05);
+}
