@@ -2,105 +2,384 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ElectroCalc Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Calculator</title>
+    <style>
+        :root {
+            --primary: #1a1a1a;
+            --secondary: #2a2a2a;
+            --display: #f0f0f0;
+            --button: #333;
+            --button-hover: #444;
+            --operator: #ff9500;
+            --operator-hover: #ffaa33;
+            --function: #555;
+            --function-hover: #666;
+            --equals: #ff9500;
+            --equals-hover: #ffaa33;
+            --clear: #a5a5a5;
+            --clear-hover: #bbbbbb;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        .calculator {
+            background-color: var(--primary);
+            border-radius: 15px;
+            padding: 20px;
+            width: 340px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .display {
+            background-color: var(--display);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            text-align: right;
+            font-size: 28px;
+            min-height: 40px;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+
+        .secondary-display {
+            color: #666;
+            font-size: 16px;
+            min-height: 20px;
+            text-align: right;
+            margin-bottom: 5px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: var(--button);
+            color: white;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-2px);
+        }
+
+        button.operator {
+            background-color: var(--operator);
+        }
+
+        button.operator:hover {
+            background-color: var(--operator-hover);
+        }
+
+        button.function {
+            background-color: var(--function);
+            font-size: 16px;
+        }
+
+        button.function:hover {
+            background-color: var(--function-hover);
+        }
+
+        button.clear {
+            background-color: var(--clear);
+            color: black;
+        }
+
+        button.clear:hover {
+            background-color: var(--clear-hover);
+        }
+
+        button.equals {
+            background-color: var(--equals);
+            grid-column: span 2;
+        }
+
+        button.equals:hover {
+            background-color: var(--equals-hover);
+        }
+
+        .shift {
+            background-color: #4a4a4a;
+            font-weight: bold;
+        }
+
+        .shift.active {
+            background-color: #ff9500;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- App Header -->
-        <header class="app-header">
-            <div class="header-content">
-                <h1 class="app-title">ElectroCalc</h1>
-                <div class="header-controls">
-                    <button id="themeToggle" class="icon-btn" aria-label="Toggle theme">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <button id="modeToggle" class="icon-btn" aria-label="Change mode">
-                        <i class="fas fa-calculator"></i>
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Mode Selection Dropdown -->
-        <div id="modeDropdown" class="mode-dropdown">
-            <div class="dropdown-content">
-                <div class="mode-category">
-                    <h3>Basic Tools</h3>
-                    <button class="mode-btn" data-mode="basic">Standard Calculator</button>
-                </div>
-                
-                <div class="mode-category">
-                    <h3>Circuit Fundamentals</h3>
-                    <button class="mode-btn" data-mode="ohm">Ohm's Law</button>
-                    <button class="mode-btn" data-mode="power">Power Calculator</button>
-                    <button class="mode-btn" data-mode="resistor">Resistor Code</button>
-                    <button class="mode-btn" data-mode="series-parallel">Series/Parallel</button>
-                </div>
-                
-                <div class="mode-category">
-                    <h3>Advanced Tools</h3>
-                    <button class="mode-btn" data-mode="reactance">Reactance</button>
-                    <button class="mode-btn" data-mode="opamp">Op-Amp</button>
-                    <button class="mode-btn" data-mode="555">555 Timer</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Calculator Display -->
-        <div class="display-container">
-            <div class="mode-indicator">
-                <span id="currentMode">Standard Calculator</span>
-            </div>
-            <div id="calculationDisplay" class="calculation-display"></div>
-            <div id="resultDisplay" class="result-display">0</div>
-        </div>
-
-        <!-- Main Calculator Interface -->
-        <div id="calculatorInterface" class="calculator-interface">
-            <!-- Content will be dynamically loaded based on mode -->
-        </div>
-
-        <!-- Universal Numpad -->
-        <div class="numpad-container">
-            <div class="numpad-grid">
-                <!-- Numbers -->
-                <button class="numpad-btn" data-value="7">7</button>
-                <button class="numpad-btn" data-value="8">8</button>
-                <button class="numpad-btn" data-value="9">9</button>
-                
-                <button class="numpad-btn" data-value="4">4</button>
-                <button class="numpad-btn" data-value="5">5</button>
-                <button class="numpad-btn" data-value="6">6</button>
-                
-                <button class="numpad-btn" data-value="1">1</button>
-                <button class="numpad-btn" data-value="2">2</button>
-                <button class="numpad-btn" data-value="3">3</button>
-                
-                <button class="numpad-btn" data-value="0">0</button>
-                <button class="numpad-btn" data-value=".">.</button>
-                <button class="numpad-btn" data-value="±">±</button>
-            </div>
+    <div class="calculator">
+        <div class="secondary-display" id="secondary-display"></div>
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="shift" id="shift" onclick="toggleShift()">SHIFT</button>
+            <button class="clear" onclick="clearAll()">AC</button>
+            <button onclick="backspace()">⌫</button>
+            <button class="operator" onclick="appendToDisplay('/')">÷</button>
+            <button class="operator" onclick="appendToDisplay('*')">×</button>
             
-            <!-- Operations -->
-            <div class="operations-grid">
-                <button class="op-btn" data-op="clear">C</button>
-                <button class="op-btn" data-op="backspace"><i class="fas fa-backspace"></i></button>
-                <button class="op-btn" data-op="/">÷</button>
-                
-                <button class="op-btn" data-op="*">×</button>
-                <button class="op-btn" data-op="-">−</button>
-                <button class="op-btn" data-op="+">+</button>
-                
-                <button class="op-btn equals" data-op="=">=</button>
-                <button class="op-btn special" id="exportPDF"><i class="fas fa-file-pdf"></i> Export</button>
-            </div>
+            <button class="function" id="sin-btn" onclick="trigFunction('sin')">sin</button>
+            <button class="function" id="cos-btn" onclick="trigFunction('cos')">cos</button>
+            <button class="function" id="tan-btn" onclick="trigFunction('tan')">tan</button>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
+            
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+            
+            <button class="function" id="asin-btn" onclick="invTrigFunction('asin')">sin⁻¹</button>
+            <button class="function" id="acos-btn" onclick="invTrigFunction('acos')">cos⁻¹</button>
+            <button class="function" id="atan-btn" onclick="invTrigFunction('atan')">tan⁻¹</button>
+            <button class="function" onclick="appendToDisplay('(')">(</button>
+            
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="function" onclick="appendToDisplay(')')">)</button>
+            
+            <button class="function" id="log-btn" onclick="logFunction()">log</button>
+            <button class="function" id="ln-btn" onclick="naturalLog()">ln</button>
+            <button class="function" onclick="squareRoot()">√</button>
+            <button class="function" onclick="power()">x^y</button>
+            
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="function" onclick="factorial()">x!</button>
+            
+            <button class="function" id="pi-btn" onclick="appendConstant('Math.PI')">π</button>
+            <button class="function" id="e-btn" onclick="appendConstant('Math.E')">e</button>
+            <button class="function" onclick="percentage()">%</button>
+            <button class="function" onclick="appendToDisplay('Math.pow(10,')">10^x</button>
+            
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button class="function" onclick="toggleSign()">±</button>
+            <button class="equals" onclick="calculate()">=</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        let currentDisplay = '0';
+        let secondaryDisplay = '';
+        let isShiftActive = false;
+        const display = document.getElementById('display');
+        const secondaryDisplayElement = document.getElementById('secondary-display');
+        const shiftButton = document.getElementById('shift');
+        
+        // Update both displays
+        function updateDisplay() {
+            display.textContent = currentDisplay;
+            secondaryDisplayElement.textContent = secondaryDisplay;
+        }
+        
+        // Append to the current display
+        function appendToDisplay(value) {
+            if (currentDisplay === '0' && value !== '.') {
+                currentDisplay = value;
+            } else {
+                currentDisplay += value;
+            }
+            updateDisplay();
+        }
+        
+        // Clear everything
+        function clearAll() {
+            currentDisplay = '0';
+            secondaryDisplay = '';
+            updateDisplay();
+        }
+        
+        // Backspace function
+        function backspace() {
+            if (currentDisplay.length === 1) {
+                currentDisplay = '0';
+            } else {
+                currentDisplay = currentDisplay.slice(0, -1);
+            }
+            updateDisplay();
+        }
+        
+        // Toggle shift for inverse functions
+        function toggleShift() {
+            isShiftActive = !isShiftActive;
+            shiftButton.classList.toggle('active');
+            
+            // Toggle between normal and inverse trig functions
+            document.getElementById('sin-btn').textContent = isShiftActive ? 'sin⁻¹' : 'sin';
+            document.getElementById('cos-btn').textContent = isShiftActive ? 'cos⁻¹' : 'cos';
+            document.getElementById('tan-btn').textContent = isShiftActive ? 'tan⁻¹' : 'tan';
+            
+            // Toggle between log and antilog
+            document.getElementById('log-btn').textContent = isShiftActive ? '10^x' : 'log';
+            document.getElementById('ln-btn').textContent = isShiftActive ? 'e^x' : 'ln';
+            
+            // Toggle between π and 2π
+            document.getElementById('pi-btn').textContent = isShiftActive ? '2π' : 'π';
+            document.getElementById('e-btn').textContent = isShiftActive ? 'e^2' : 'e';
+        }
+        
+        // Trigonometric functions
+        function trigFunction(func) {
+            secondaryDisplay = func + '(' + currentDisplay + ')';
+            const radians = parseFloat(currentDisplay);
+            let result;
+            
+            switch(func) {
+                case 'sin': result = Math.sin(radians); break;
+                case 'cos': result = Math.cos(radians); break;
+                case 'tan': result = Math.tan(radians); break;
+            }
+            
+            currentDisplay = result.toString();
+            updateDisplay();
+        }
+        
+        // Inverse trigonometric functions
+        function invTrigFunction(func) {
+            secondaryDisplay = func + '(' + currentDisplay + ')';
+            const value = parseFloat(currentDisplay);
+            let result;
+            
+            switch(func) {
+                case 'asin': result = Math.asin(value); break;
+                case 'acos': result = Math.acos(value); break;
+                case 'atan': result = Math.atan(value); break;
+            }
+            
+            currentDisplay = result.toString();
+            updateDisplay();
+        }
+        
+        // Logarithm functions
+        function logFunction() {
+            if (isShiftActive) {
+                // 10^x
+                secondaryDisplay = '10^(' + currentDisplay + ')';
+                currentDisplay = Math.pow(10, parseFloat(currentDisplay)).toString();
+            } else {
+                // log10
+                secondaryDisplay = 'log(' + currentDisplay + ')';
+                currentDisplay = Math.log10(parseFloat(currentDisplay)).toString();
+            }
+            updateDisplay();
+        }
+        
+        // Natural logarithm
+        function naturalLog() {
+            if (isShiftActive) {
+                // e^x
+                secondaryDisplay = 'e^(' + currentDisplay + ')';
+                currentDisplay = Math.exp(parseFloat(currentDisplay)).toString();
+            } else {
+                // ln
+                secondaryDisplay = 'ln(' + currentDisplay + ')';
+                currentDisplay = Math.log(parseFloat(currentDisplay)).toString();
+            }
+            updateDisplay();
+        }
+        
+        // Square root
+        function squareRoot() {
+            secondaryDisplay = '√(' + currentDisplay + ')';
+            currentDisplay = Math.sqrt(parseFloat(currentDisplay)).toString();
+            updateDisplay();
+        }
+        
+        // Power function
+        function power() {
+            secondaryDisplay = currentDisplay + '^';
+            currentDisplay = '0';
+            updateDisplay();
+        }
+        
+        // Factorial
+        function factorial() {
+            const num = parseInt(currentDisplay);
+            if (num < 0) {
+                currentDisplay = 'Error';
+                secondaryDisplay = 'Factorial of negative';
+            } else {
+                let result = 1;
+                for (let i = 2; i <= num; i++) {
+                    result *= i;
+                }
+                secondaryDisplay = currentDisplay + '!';
+                currentDisplay = result.toString();
+            }
+            updateDisplay();
+        }
+        
+        // Append constants
+        function appendConstant(constant) {
+            if (constant === 'Math.PI') {
+                currentDisplay = isShiftActive ? (2 * Math.PI).toString() : Math.PI.toString();
+            } else if (constant === 'Math.E') {
+                currentDisplay = isShiftActive ? (Math.E * Math.E).toString() : Math.E.toString();
+            }
+            updateDisplay();
+        }
+        
+        // Percentage
+        function percentage() {
+            currentDisplay = (parseFloat(currentDisplay) / 100).toString();
+            updateDisplay();
+        }
+        
+        // Toggle sign
+        function toggleSign() {
+            if (currentDisplay.startsWith('-')) {
+                currentDisplay = currentDisplay.substring(1);
+            } else {
+                currentDisplay = '-' + currentDisplay;
+            }
+            updateDisplay();
+        }
+        
+        // Main calculation function
+        function calculate() {
+            try {
+                // Replace × and ÷ with * and /
+                let expression = currentDisplay.replace(/×/g, '*').replace(/÷/g, '/');
+                
+                // Handle power operations
+                if (secondaryDisplay.includes('^')) {
+                    expression = secondaryDisplay.replace('^', '') + '**' + currentDisplay;
+                }
+                
+                // Evaluate the expression
+                const result = eval(expression);
+                secondaryDisplay = currentDisplay + '=';
+                currentDisplay = result.toString();
+                updateDisplay();
+            } catch (error) {
+                currentDisplay = 'Error';
+                secondaryDisplay = 'Invalid expression';
+                updateDisplay();
+                setTimeout(clearAll, 1500);
+            }
+        }
+    </script>
 </body>
 </html>
